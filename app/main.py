@@ -1,20 +1,17 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy import select
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 
-from app.db.session import get_db
-from app.models.user import User
+from app.api.routes import health, users
 
 app = FastAPI(title="OnlyFlans API")
 
+app.include_router(
+    health.router,
+    prefix="/api/v1",
+    tags=["health"],
+)
 
-@app.get("/api/v1/health")
-async def health():
-    return {"status": "ok"}
-
-
-@app.get("/api/v1/users")
-def get_users(db: Session = Depends(get_db)):
-    users = db.scalars(select(User)).all()
-
-    return users
+app.include_router(
+    users.router,
+    prefix="/api/v1/users",
+    tags=["users"],
+)
