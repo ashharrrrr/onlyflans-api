@@ -3,3 +3,21 @@ services:
     build: .
     ports:
       - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://onlyflans:onlyflans@postgres:5432/onlyflans
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: onlyflans
+      POSTGRES_PASSWORD: onlyflans
+      POSTGRES_DB: onlyflans
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
